@@ -32,8 +32,7 @@ The following setting have been changed, as root, on each machine:
 - nano /etc/resolv.conf
   - nameserver 10.100.204.1
 - nano /etc/network/interfaces
-  - # The primary network interface
-    allow-hotplug enp9s0
+  - allow-hotplug enp9s0
     iface enp9s0 inet static
     address 10.100.204.150
     netmask 255.255.255.0
