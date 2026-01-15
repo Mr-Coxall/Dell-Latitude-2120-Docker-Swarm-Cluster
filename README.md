@@ -53,3 +53,32 @@ Once the 1st machine is setup and test it needs to be cloned to the rest:
   - nano /etc/hostname
     - the hostname to next in series
   - ensure each machine also on A02 BIOS and "power" on setting updated in BIOS
+
+## Create Docker Swarm
+
+Follow these steps:
+- docker swarm init --advertise-addr <MANAGER-IP>
+- now run this command to join the next 2 nodes as managers:
+  docker swarm join-token manager
+- copy the docker swarm join --token (from above)
+- run the command worker node on all other worker nodes
+- on a manager, docker nodes ls, to see status
+
+## KeepAlived
+
+This creates a Virtual IP for the managers, so you have 1 common endpoint of an manager
+- apt install keepalived
+vrrp_instance VI_1 {
+    state MASTER
+    interface eth0           # Change to your actual network interface name
+    virtual_router_id 51
+    priority 101             # Higher priority wins leadership
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass swarm_secret
+    }
+    virtual_ipaddress {
+        192.168.1.100        # This is your single Floating IP
+    }
+}
