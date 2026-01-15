@@ -17,6 +17,8 @@ Here is the spec sheet on the [Dell Latitude 2120 Netbooks](./images/latitude-21
 
 Each machine has the exact same identical initial setup:
 - Debian 13 - Trixie, server no GUI and slim nothing extra loaded
+- BIOS upgraded to A02
+  - BIOS power setting changed to on "power restart" the computer automatically reboots
 - additional software installed:
   - openssh-server (apt install openssh-server)
   - [docker](https://docs.docker.com/engine/install/debian/)
@@ -37,3 +39,18 @@ The following setting have been changed, as root, on each machine:
     netmask 255.255.255.0
     gateway 10.100.204.1
     dns-nameservers 10.100.204.1
+
+## Image and Cloning
+
+Once the 1st machine is setup and test it needs to be cloned to the rest:
+- download [Rescuezilla](https://github.com/rescuezilla/rescuezilla)
+- burn the iso to USB drive
+- have 2nd USB to save the image onto
+- boot from Rescuezilla, clone image
+- take each other machine, boot from Rescuezilla and burn saved image onto new machine
+- once done and each new machine is rebooted change the following:
+  - nano /etc/network/interfaces
+    - the IP address to next in series
+  - nano /etc/hostname
+    - the hostname to next in series
+  - ensure each machine also on A02 BIOS and "power" on setting updated in BIOS
