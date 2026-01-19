@@ -81,4 +81,28 @@ vrrp_instance VI_1 {
     virtual_ipaddress {
         192.168.1.100        # This is your single Floating IP
     }
-}
+
+## Create Docker Portainer Agent on Managers
+
+- add this docker-compose.yml:
+services:
+  agent:
+    image: portainer/agent:2.33.6
+    environment:
+      - AGENT_CLUSTER_ADDR=tasks.agent # Matches the service name 'agent'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - agent_network
+    deploy:
+      mode: global # Runs one agent on every node
+      placement:
+        constraints: [node.platform.os == linux]
+
+networks:
+  agent_network:
+    driver: overlay
+    attachable: true
+
+- DO NOT use docker compose up -d but docker stack deploy -c docker-compose.yml portainer
